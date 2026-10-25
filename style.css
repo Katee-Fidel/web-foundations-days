@@ -1,0 +1,31 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #203b36; background: #f5f4ed; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 850px; margin: auto; padding: 48px 24px; }
+header { margin-bottom: 36px; }
+.eyebrow { font-size: .75rem; letter-spacing: .16em; font-weight: 700; }
+h1 { font-size: clamp(2.8rem, 8vw, 4.5rem); letter-spacing: -.06em; margin: 8px 0; }
+h2 { font-size: 1.3rem; }
+p, li { line-height: 1.6; }
+.panel, .note { background: #fffef9; border: 1px solid #d4d9ce; border-radius: 14px; padding: 24px; }
+form { display: grid; gap: 12px; }
+label { font-weight: 650; }
+input, textarea { width: 100%; padding: 12px; border: 1px solid #879b8d; border-radius: 7px; font: inherit; color: inherit; }
+textarea { resize: vertical; }
+button { border: 0; border-radius: 7px; background: #254e43; color: white; padding: 12px 18px; font: inherit; font-weight: 650; cursor: pointer; }
+form button { justify-self: start; }
+button:hover { background: #183b31; }
+button:disabled { opacity: .5; cursor: wait; }
+:focus-visible { outline: 3px solid #bd6534; outline-offset: 3px; }
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 30px; }
+#status { padding: 12px 14px; border-radius: 7px; background: #e8ebe4; }
+#status.success { color: #185238; background: #e0f1e5; border-left: 4px solid #288052; }
+#status.error { color: #842a25; background: #fbe7e2; border-left: 4px solid #b83d32; }
+#notes-list { list-style: none; padding: 0; display: grid; gap: 16px; }
+.note h3 { margin-top: 0; overflow-wrap: anywhere; }
+.note p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.delete-btn { background: #f3e7df; color: #783c2a; font-size: .85rem; }
+.delete-btn:hover { background: #e9d4c7; }
+.empty { padding: 24px; text-align: center; color: #53645c; border: 1px dashed #879b8d; border-radius: 12px; }
+footer { margin-top: 36px; color: #53645c; font-size: .85rem; }
+@media (max-width: 480px) { main { padding: 28px 16px; } .panel, .note { padding: 18px; } }
