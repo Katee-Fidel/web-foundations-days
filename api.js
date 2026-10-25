@@ -50,6 +50,14 @@ function renderNotes() {
     const body = document.createElement("p");
     body.textContent = note.body;
     item.append(heading, body);
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "delete-btn";
+    deleteButton.textContent = "Delete";
+    deleteButton.setAttribute("aria-label", `Delete note: ${note.title}`);
+    deleteButton.disabled = busy;
+    deleteButton.addEventListener("click", () => deleteNote(note));
+    item.append(deleteButton);
     list.append(item);
   }
 }
@@ -72,6 +80,26 @@ async function loadNotes() {
 }
 
 loadButton.addEventListener("click", loadNotes);
+
+async function deleteNote(note) {
+  if (busy) return;
+  setBusy(true);
+  showStatus("Deleting note...");
+  try {
+    await request(`/${encodeURIComponent(note.id)}`, { method: "DELETE" });
+    // JSONPlaceholder simulates writes and may reuse ID 101 for every POST.
+    // Keep creations in memory; remove by object identity so only the clicked
+    // note disappears, even if several creations share an ID. Reload restores
+    // server fixtures because the practice API never persists our changes.
+    notes = notes.filter(candidate => candidate !== note);
+    renderNotes();
+    showStatus("Note deleted.", "success");
+  } catch (error) {
+    showStatus(`Could not delete this note. Please try again. ${error.message}`, "error");
+  } finally {
+    setBusy(false);
+  }
+}
 async function createNote(event) {
   event.preventDefault();
   if (busy) return;
