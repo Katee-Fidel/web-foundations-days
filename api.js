@@ -26,7 +26,9 @@ function showStatus(message, kind = "") {
 function setBusy(value) {
   busy = value;
   loadButton.disabled = value;
-  submitButton.disabled = true; // Enabled when creation is implemented.
+  submitButton.disabled = value;
+  titleInput.disabled = value;
+  bodyInput.disabled = value;
   list.setAttribute("aria-busy", String(value));
   list.querySelectorAll("button").forEach(button => { button.disabled = value; });
 }
@@ -70,4 +72,34 @@ async function loadNotes() {
 }
 
 loadButton.addEventListener("click", loadNotes);
-form.addEventListener("submit", event => { event.preventDefault(); });
+async function createNote(event) {
+  event.preventDefault();
+  if (busy) return;
+  const title = titleInput.value.trim();
+  const body = bodyInput.value.trim();
+  if (!title || title.length > 100) {
+    showStatus("Please enter a title between 1 and 100 characters.", "error");
+    titleInput.focus();
+    return;
+  }
+  setBusy(true);
+  showStatus("Saving note...");
+  try {
+    const { data, status: code } = await request("", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify({ title, body, userId: 1 })
+    });
+    if (!data || data.id == null) throw new Error("The server did not return a note ID.");
+    notes.unshift({ ...data, title, body });
+    renderNotes();
+    showStatus(`Note created (status ${code}, id ${data.id}).`, "success");
+    form.reset();
+  } catch (error) {
+    showStatus(`Could not save your note. Please try again. ${error.message}`, "error");
+  } finally {
+    setBusy(false);
+  }
+}
+
+form.addEventListener("submit", createNote);
